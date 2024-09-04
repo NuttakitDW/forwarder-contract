@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity 0.8.10;
-import '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
-import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
-import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
-import '@openzeppelin/contracts/token/ERC1155/utils/ERC1155Receiver.sol';
+import '../lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol';
+import '../lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol';
+import '../lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol';
+import '../lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol';
 import './ERC20Interface.sol';
 import './TransferHelper.sol';
 import './IForwarder.sol';
@@ -113,7 +113,9 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * @param data Additional data with no specified format, sent in call to `_to`
    */
   function onERC721Received(
+    // solhint-disable-next-line no-unused-vars
     address _operator,
+    // solhint-disable-next-line no-unused-vars
     address _from,
     uint256 _tokenId,
     bytes memory data
@@ -148,7 +150,9 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * @inheritdoc IERC1155Receiver
    */
   function onERC1155Received(
+    // solhint-disable-next-line no-unused-vars
     address _operator,
+    // solhint-disable-next-line no-unused-vars
     address _from,
     uint256 id,
     uint256 value,
@@ -171,7 +175,9 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * @inheritdoc IERC1155Receiver
    */
   function onERC1155BatchReceived(
+    // solhint-disable-next-line no-unused-vars
     address _operator,
+    // solhint-disable-next-line no-unused-vars
     address _from,
     uint256[] calldata ids,
     uint256[] calldata values,
