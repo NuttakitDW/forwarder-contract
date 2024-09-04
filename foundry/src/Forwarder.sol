@@ -8,6 +8,8 @@ import './ERC20Interface.sol';
 import './TransferHelper.sol';
 import './IForwarder.sol';
 
+// solhint-disable no-unused-vars
+
 /**
  * Contract that will forward any incoming Ether to the creator of the contract
  *
@@ -113,9 +115,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * @param data Additional data with no specified format, sent in call to `_to`
    */
   function onERC721Received(
-    // solhint-disable-next-line no-unused-vars
     address _operator,
-    // solhint-disable-next-line no-unused-vars
     address _from,
     uint256 _tokenId,
     bytes memory data
