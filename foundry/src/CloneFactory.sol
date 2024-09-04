@@ -24,6 +24,7 @@ pragma solidity 0.8.10;
 */
 //solhint-disable max-line-length
 //solhint-disable no-inline-assembly
+// solhint-disable private-vars-leading-underscore
 
 contract CloneFactory {
   function createClone(address target, bytes32 salt)
