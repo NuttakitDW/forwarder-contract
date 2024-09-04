@@ -2,7 +2,7 @@
 // source: https://github.com/Uniswap/solidity-lib/blob/master/contracts/libraries/TransferHelper.sol
 pragma solidity 0.8.10;
 
-import '@openzeppelin/contracts/utils/Address.sol';
+import '../lib/openzeppelin-contracts/contracts/utils/Address.sol';
 
 // helper methods for interacting with ERC20 tokens and sending ETH that do not consistently return true/false
 library TransferHelper {
