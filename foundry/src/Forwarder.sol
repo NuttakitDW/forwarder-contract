@@ -83,7 +83,9 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * Default function; Gets called when Ether is deposited with no data, and forwards it to the parent address
    */
   receive() external payable {
-    flush();
+    if(autoFlushNative) {
+      flush();
+    }
   }
 
   /**
