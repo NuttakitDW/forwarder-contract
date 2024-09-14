@@ -9,6 +9,7 @@ contract ForwarderFactory is CloneFactory {
   event ForwarderCreated(
     address newForwarderAddress,
     address parentAddress,
+    bool shouldAutoFlushNative,
     bool shouldAutoFlushERC721,
     bool shouldAutoFlushERC1155
   );
@@ -18,12 +19,13 @@ contract ForwarderFactory is CloneFactory {
   }
 
   function createForwarder(address parent, bytes32 salt) external {
-    this.createForwarder(parent, salt, true, true);
+    this.createForwarder(parent, salt, true, true, true);
   }
 
   function createForwarder(
     address parent,
     bytes32 salt,
+    bool shouldAutoFlushNative,
     bool shouldAutoFlushERC721,
     bool shouldAutoFlushERC1155
   ) external {
@@ -33,12 +35,14 @@ contract ForwarderFactory is CloneFactory {
     address payable clone = createClone(implementationAddress, finalSalt);
     Forwarder(clone).init(
       parent,
+      shouldAutoFlushNative,
       shouldAutoFlushERC721,
       shouldAutoFlushERC1155
     );
     emit ForwarderCreated(
       clone,
       parent,
+      shouldAutoFlushNative,
       shouldAutoFlushERC721,
       shouldAutoFlushERC1155
     );

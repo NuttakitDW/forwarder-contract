@@ -8,7 +8,7 @@ import './ERC20Interface.sol';
 import './TransferHelper.sol';
 import './IForwarder.sol';
 
-// solhint-disable no-unused-vars
+// Suppress all unused parameter warnings
 
 /**
  * Contract that will forward any incoming Ether to the creator of the contract
@@ -17,6 +17,7 @@ import './IForwarder.sol';
 contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
   // Address to which any funds sent to this contract will be forwarded
   address public parentAddress;
+  bool public autoFlushNative = true;
   bool public autoFlush721 = true;
   bool public autoFlush1155 = true;
 
@@ -27,6 +28,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    */
   function init(
     address _parentAddress,
+    bool _autoFlushNative,
     bool _autoFlush721,
     bool _autoFlush1155
   ) external onlyUninitialized {
@@ -34,6 +36,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
     uint256 value = address(this).balance;
 
     // set whether we want to automatically flush erc721/erc1155 tokens or not
+    autoFlushNative = _autoFlushNative;
     autoFlush721 = _autoFlush721;
     autoFlush1155 = _autoFlush1155;
 
@@ -71,7 +74,9 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * Default function; Gets called when data is sent but does not match any other function
    */
   fallback() external payable {
-    flush();
+    if(autoFlushNative) {
+      flush();
+    }
   }
 
   /**
@@ -109,14 +114,12 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * ERC721 standard callback function for when a ERC721 is transfered. The forwarder will send the nft
    * to the base wallet once the nft contract invokes this method after transfering the nft.
    *
-   * @param _operator The address which called `safeTransferFrom` function
-   * @param _from The address of the sender
    * @param _tokenId The token id of the nft
    * @param data Additional data with no specified format, sent in call to `_to`
    */
   function onERC721Received(
-    address _operator,
-    address _from,
+    address,
+    address,
     uint256 _tokenId,
     bytes memory data
   ) external virtual override returns (bytes4) {
@@ -150,10 +153,8 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * @inheritdoc IERC1155Receiver
    */
   function onERC1155Received(
-    // solhint-disable-next-line no-unused-vars
-    address _operator,
-    // solhint-disable-next-line no-unused-vars
-    address _from,
+    address,
+    address,
     uint256 id,
     uint256 value,
     bytes calldata data
@@ -175,10 +176,8 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    * @inheritdoc IERC1155Receiver
    */
   function onERC1155BatchReceived(
-    // solhint-disable-next-line no-unused-vars
-    address _operator,
-    // solhint-disable-next-line no-unused-vars
-    address _from,
+    address,
+    address,
     uint256[] calldata ids,
     uint256[] calldata values,
     bytes calldata data
