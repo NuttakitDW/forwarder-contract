@@ -113,6 +113,17 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
   }
 
   /**
+   * @inheritdoc IForwarder
+   */
+  function setAutoFlushNative(bool autoFlush)
+    external
+    virtual
+    onlyParent
+  {
+    autoFlushNative = autoFlush;
+  }
+
+  /**
    * ERC721 standard callback function for when a ERC721 is transfered. The forwarder will send the nft
    * to the base wallet once the nft contract invokes this method after transfering the nft.
    *
