@@ -5,21 +5,31 @@ SRC_DIR := ./src
 BUILD_DIR := ./out
 TEST_DIR := ./test
 
+.PHONY: test test-coverage
+
+
 # Default target to build the project
 build:
 	@forge build
 
 # Run tests
 test:
-	@forge test
+	@forge test -vvv
+
+test-coverage:
+	@forge coverage summary
 
 # Clean build directory
 clean:
 	@rm -rf $(BUILD_DIR)
 
 # Deploy contract (replace with your contract name and constructor args)
-deploy:
-	@forge create  --rpc-url ${RPC_URL} --private-key ${PRIVATE_KEY} src/${CONTRACT}.sol:${CONTRACT} --constructor-args-path factory.txt --verify
+deploy-factory:
+	@forge create  --rpc-url ${RPC_URL} --private-key ${PRIVATE_KEY} src/ForwarderFactory.sol:ForwarderFactory --constructor-args-path factory.txt --verify
+
+# Deploy contract (replace with your contract name and constructor args)
+deploy-forwarder:
+	@forge create  --rpc-url ${RPC_URL} --private-key ${PRIVATE_KEY} src/Forwarder.sol:Forwarder --verify
 
 # Lint the code using solhint (if installed)
 lint:
