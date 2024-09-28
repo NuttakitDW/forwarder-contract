@@ -17,6 +17,7 @@ import './IForwarder.sol';
 contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
   // Address to which any funds sent to this contract will be forwarded
   address public parentAddress;
+  address public adminAddress;
   bool public autoFlushNative = true;
   bool public autoFlush721 = true;
   bool public autoFlush1155 = true;
@@ -28,11 +29,13 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    */
   function init(
     address _parentAddress,
+    address _adminAddress,
     bool _autoFlushNative,
     bool _autoFlush721,
     bool _autoFlush1155
   ) external onlyUninitialized {
     parentAddress = _parentAddress;
+    adminAddress = _adminAddress;
     uint256 value = address(this).balance;
 
     // set whether we want to automatically flush erc721/erc1155 tokens or not
@@ -59,6 +62,14 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
    */
   modifier onlyParent {
     require(msg.sender == parentAddress, 'Only Parent');
+    _;
+  }
+
+  /**
+   * Modifier that will execute internal code block only if the sender is the admin address
+   */
+  modifier onlyAdmin {
+    require(msg.sender == adminAddress, 'Only Admin');
     _;
   }
 
@@ -91,11 +102,22 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
   /**
    * @inheritdoc IForwarder
    */
+  function setAdmin(address admin)
+    external
+    virtual
+    onlyParent
+  {
+    adminAddress = admin;
+  }
+
+  /**
+   * @inheritdoc IForwarder
+   */
   function setAutoFlush721(bool autoFlush)
     external
     virtual
     override
-    onlyParent
+    onlyAdmin
   {
     autoFlush721 = autoFlush;
   }
@@ -107,7 +129,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
     external
     virtual
     override
-    onlyParent
+    onlyAdmin
   {
     autoFlush1155 = autoFlush;
   }
@@ -118,7 +140,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
   function setAutoFlushNative(bool autoFlush)
     external
     virtual
-    onlyParent
+    onlyAdmin
   {
     autoFlushNative = autoFlush;
   }
@@ -221,7 +243,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
     external
     virtual
     override
-    onlyParent
+    onlyAdmin
   {
     ERC20Interface instance = ERC20Interface(tokenContractAddress);
     address forwarderAddress = address(this);
@@ -244,7 +266,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
     external
     virtual
     override
-    onlyParent
+    onlyAdmin
   {
     IERC721 instance = IERC721(tokenContractAddress);
     require(
@@ -263,7 +285,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
     external
     virtual
     override
-    onlyParent
+    onlyAdmin
   {
     IERC1155 instance = IERC1155(tokenContractAddress);
     require(
@@ -289,7 +311,7 @@ contract Forwarder is IERC721Receiver, ERC1155Receiver, IForwarder {
   function batchFlushERC1155Tokens(
     address tokenContractAddress,
     uint256[] calldata tokenIds
-  ) external virtual override onlyParent {
+  ) external virtual override onlyAdmin {
     IERC1155 instance = IERC1155(tokenContractAddress);
     require(
       instance.supportsInterface(type(IERC1155).interfaceId),

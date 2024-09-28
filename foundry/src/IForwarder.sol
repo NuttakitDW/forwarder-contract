@@ -5,6 +5,13 @@ import '../lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'
 
 interface IForwarder is IERC165 {
   /**
+   * Sets the admin parameter.
+   *
+   * @param admin to set admin
+   */
+  function setAdmin(address admin) external;
+
+  /**
    * Sets the autoflush721 parameter.
    *
    * @param autoFlush whether to autoflush erc721 tokens
